@@ -1,0 +1,11 @@
+{
+  "name": "Nina: Missão Escola",
+  "short_name": "Nina",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#020b1d",
+  "theme_color": "#061a3a",
+  "description": "Jogo Nina: Missão Escola"
+}
