@@ -1,0 +1,43 @@
+name: Publish Nina game
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Download compiled game
+        run: |
+          mkdir -p site
+          curl -fL 'https://sdmntprbrazilsouth.oaiusercontent.com/files/00000000-5b34-820e-b955-9cde65dd5d18/raw?se=2026-11-08T13%3A56%3A08Z&sp=r&sv=2026-02-06&sr=b&scid=05d2056b-1d73-5839-bbba-a0305d5701e8&skoid=fbc53507-c13f-4907-b4dd-0e03c91f5ad8&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-11-07T23%3A32%3A53Z&ske=2026-11-08T23%3A32%3A53Z&sks=b&skv=2026-02-06&sig=K6OzhwKsm/en4ZKxX4t3kSa8ReQ%2BzkyeBgPq8pkzcY8%3D' -o game.zip
+          unzip -q game.zip -d site
+          test -f site/index.html
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
